@@ -16,7 +16,7 @@ single codebase. Ported from an earlier Python implementation
 
 ## Screenshots
 
-<!-- Add screenshots here: docs/screenshot-counters.png, docs/screenshot-status.png -->
+<!-- Add screenshots here: docs/PLC-Monitor.png, docs/PLC-Monitor stari.png, docs/PLC-Monitor comenzi.png -->
 
 | Counters | Status | Commands |
 |---|---|---|

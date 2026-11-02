@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PlcApp.ViewModels"
+             xmlns:models="clr-namespace:PlcApp.Models"
+             x:Class="PlcApp.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="Monitorizare PLC">
+
+    <ContentPage.Resources>
+
+        <!-- ===================== cardul unui contor ===================== -->
+        <DataTemplate x:Key="MetricCardTemplate" x:DataType="models:MetricItem">
+            <Border Style="{StaticResource CardStyle}"
+                    WidthRequest="268"
+                    Margin="0,0,14,14">
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+
+                    <!-- titlu + stare -->
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Ellipse Grid.Column="0"
+                                 WidthRequest="10"
+                                 HeightRequest="10"
+                                 VerticalOptions="Center"
+                                 Fill="{Binding StateBrush}" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="1">
+                            <Label Text="{Binding Title}" FontSize="15" FontAttributes="Bold" />
+                            <Label Text="{Binding StateText}" Style="{StaticResource MutedLabel}" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- valoarea totala -->
+                    <Label Grid.Row="1"
+                           Text="{Binding TotalText}"
+                           Style="{StaticResource ValueLabel}"
+                           TextColor="{Binding Accent}" />
+
+                    <!-- ultima zi -->
+                    <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="ultima zi" Style="{StaticResource MutedLabel}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding LastDayText}"
+                               FontSize="15"
+                               FontAttributes="Bold" />
+                    </Grid>
+
+                    <ProgressBar Grid.Row="3"
+                                 Progress="{Binding Progress}"
+                                 ProgressColor="{Binding Accent}" />
+
+                    <Label Grid.Row="4"
+                           Text="{Binding ProgressText}"
+                           Style="{StaticResource MutedLabel}" />
+
+                    <GraphicsView Grid.Row="5"
+                                  HeightRequest="42"
+                                  Drawable="{Binding Sparkline}" />
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- ============================ BARA DE SUS ============================ -->
+        <Border Grid.Row="0" Style="{StaticResource PanelStyle}" Margin="16,16,16,6">
+            <VerticalStackLayout Spacing="18">
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="MONITORIZARE PLC"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1" />
+                        <Label Text="Citire OPC UA in timp real" Style="{StaticResource MutedLabel}" />
+                    </VerticalStackLayout>
+
+                    <Border Grid.Column="1" Style="{StaticResource PillStyle}" VerticalOptions="Center">
+                        <HorizontalStackLayout Spacing="9">
+                            <Ellipse WidthRequest="11"
+                                     HeightRequest="11"
+                                     VerticalOptions="Center"
+                                     Fill="{Binding StatusBrush}" />
+                            <Label Text="{Binding StatusText}"
+                                   FontSize="10"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Panoul de setari: porneste ascuns (AreSettingsVisible = false in ViewModel)
+                     si se deschide din butonul de mai jos. Butoanele raman in afara lui,
+                     altfel ar disparea impreuna cu panoul. -->
+                <VerticalStackLayout IsVisible="{Binding AreSettingsVisible}" Spacing="12">
+
+                    <HorizontalStackLayout Spacing="24">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="ADRESA PLC" Style="{StaticResource MutedLabel}" />
+                            <!-- Enter in camp aplica adresa noua si reconecteaza. -->
+                            <Entry Text="{Binding Host}"
+                                   WidthRequest="190"
+                                   ReturnCommand="{Binding ReconnectCommand}" />
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="UNITATE TIMP" Style="{StaticResource MutedLabel}" />
+                            <Picker ItemsSource="{Binding UnitOptions}"
+                                    SelectedIndex="{Binding SelectedUnitIndex}"
+                                    WidthRequest="150" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+
+                <HorizontalStackLayout Spacing="12">
+                    <Button Text="Tema"
+                            Style="{StaticResource GhostButton}"
+                            Command="{Binding ToggleThemeCommand}" />
+                    <Button Text="{Binding SettingsToggleText}"
+                            Style="{StaticResource GhostButton}"
+                            Command="{Binding ToggleSettingsCommand}" />
+                </HorizontalStackLayout>
+
+                <!-- mesaj de eroare -->
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="#1AF43F5E"
+                        Stroke="{StaticResource Rose}"
+                        StrokeThickness="1"
+                        Padding="14,10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Label Text="{Binding ErrorText}"
+                           FontSize="13"
+                           TextColor="{StaticResource Rose}" />
+                </Border>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- ============================ CONTINUT ============================ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,10,16,16" Spacing="14">
+
+                <Label Text="ECHIPAMENTE" Style="{StaticResource SectionTitle}" />
+                <FlexLayout Wrap="Wrap"
+                            Direction="Row"
+                            BindableLayout.ItemsSource="{Binding Equipment}"
+                            BindableLayout.ItemTemplate="{StaticResource MetricCardTemplate}" />
+
+                <Label Text="ZONE DE INCALZIRE" Style="{StaticResource SectionTitle}" />
+                <FlexLayout Wrap="Wrap"
+                            Direction="Row"
+                            BindableLayout.ItemsSource="{Binding Heating}"
+                            BindableLayout.ItemTemplate="{StaticResource MetricCardTemplate}" />
+
+                <!-- card evidentiat: urmatoarea recirculare -->
+                <Border Style="{StaticResource CardStyle}">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" RowDefinitions="Auto,Auto,Auto" RowSpacing="8">
+                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="2">
+                            <Label Text="Timp pana la urmatoarea recirculare"
+                                   FontSize="15"
+                                   FontAttributes="Bold" />
+                            <Label Text="contor descrescator transmis de PLC"
+                                   Style="{StaticResource MutedLabel}" />
+                        </VerticalStackLayout>
+
+                        <Label Grid.Row="0" Grid.Column="1"
+                               Text="{Binding NextRecirculationText}"
+                               FontSize="30"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Teal}"
+                               VerticalOptions="Center" />
+
+                        <ProgressBar Grid.Row="1" Grid.ColumnSpan="2"
+                                     Progress="{Binding NextRecirculationProgress}"
+                                     ProgressColor="{StaticResource Teal}" />
+
+                        <Label Grid.Row="2" Grid.ColumnSpan="2"
+                               Text="raportat la un ciclu de o ora"
+                               Style="{StaticResource MutedLabel}" />
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- ============================ BARA DE JOS ============================ -->
+        <Border Grid.Row="2" Style="{StaticResource PillStyle}" Margin="16,0,16,14" Padding="16,10">
+            <FlexLayout Wrap="Wrap" Direction="Row" AlignItems="Center">
+                <Label Text="{Binding SourceText, StringFormat='Sursa: {0}'}"
+                       Style="{StaticResource MutedLabel}"
+                       Margin="0,0,20,0" />
+                <Label Text="{Binding LastUpdateText, StringFormat='Ultima actualizare: {0}'}"
+                       Style="{StaticResource MutedLabel}"
+                       Margin="0,0,20,0" />
+                <Label Text="{Binding SampleCount, StringFormat='Citiri: {0}'}"
+                       Style="{StaticResource MutedLabel}"
+                       Margin="0,0,20,0" />
+                <Button Text="Reset grafice"
+                        Style="{StaticResource GhostButton}"
+                        HeightRequest="32"
+                        FontSize="12"
+                        Padding="12,0"
+                        Command="{Binding ResetCountersCommand}" />
+            </FlexLayout>
+        </Border>
+
+    </Grid>
+</ContentPage>

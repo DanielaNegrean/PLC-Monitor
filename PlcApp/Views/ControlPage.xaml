@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PlcApp.ViewModels"
+             xmlns:models="clr-namespace:PlcApp.Models"
+             x:Class="PlcApp.Views.ControlPage"
+             x:DataType="vm:ControlViewModel"
+             Title="Comenzi">
+
+    <ContentPage.Resources>
+
+        <!-- ===================== cardul unei variabile ===================== -->
+        <DataTemplate x:Key="CommandCardTemplate" x:DataType="models:PlcCommand">
+            <Border Style="{StaticResource CardStyle}"
+                    WidthRequest="340"
+                    Margin="0,0,14,14">
+                <VerticalStackLayout Spacing="10">
+
+                    <!-- denumire -->
+                    <VerticalStackLayout>
+                        <Label Text="DENUMIRE" Style="{StaticResource FieldLabel}" />
+                        <Entry Text="{Binding Name}" Placeholder="Setpoint temperatura" />
+                    </VerticalStackLayout>
+
+                    <!-- node id -->
+                    <VerticalStackLayout>
+                        <Label Text="NODE ID" Style="{StaticResource FieldLabel}" />
+                        <Entry Text="{Binding NodeId}" Placeholder="ns=4;i=70" />
+                    </VerticalStackLayout>
+
+                    <!-- tip de data -->
+                    <VerticalStackLayout>
+                        <Label Text="TIP DE DATA" Style="{StaticResource FieldLabel}" />
+                        <Picker SelectedIndex="{Binding KindIndex}"
+                                ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type vm:ControlViewModel}}, Path=KindOptions}" />
+                    </VerticalStackLayout>
+
+                    <!-- valoarea de trimis -->
+                    <VerticalStackLayout>
+                        <Label Text="VALOARE DE TRIMIS" Style="{StaticResource FieldLabel}" />
+                        <Entry Text="{Binding InputValue}" Placeholder="22.5" />
+                    </VerticalStackLayout>
+
+                    <!-- valoarea citita acum din PLC -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" Text="in PLC acum" Style="{StaticResource MutedLabel}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding CurrentValueText}"
+                               FontSize="15"
+                               FontAttributes="Bold" />
+                    </Grid>
+
+                    <!-- actiuni -->
+                    <FlexLayout Wrap="Wrap" Direction="Row">
+                        <Button Text="Trimite"
+                                Margin="0,0,10,0"
+                                Style="{StaticResource PrimaryButton}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ControlViewModel}}, Path=WriteCommand}"
+                                CommandParameter="{Binding .}" />
+                        <Button Text="Citeste"
+                                Margin="0,0,10,0"
+                                Style="{StaticResource GhostButton}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ControlViewModel}}, Path=ReadCommand}"
+                                CommandParameter="{Binding .}" />
+                        <Button Text="Sterge"
+                                Style="{StaticResource DangerButton}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ControlViewModel}}, Path=RemoveCommand}"
+                                CommandParameter="{Binding .}" />
+                    </FlexLayout>
+
+                    <!-- rezultatul ultimei operatii -->
+                    <Label Text="{Binding StatusText}"
+                           IsVisible="{Binding HasStatus}"
+                           FontSize="13"
+                           TextColor="{Binding StatusColor}" />
+
+                </VerticalStackLayout>
+            </Border>
+        </DataTemplate>
+
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ============================ BARA DE SUS ============================ -->
+        <Border Grid.Row="0" Style="{StaticResource PanelStyle}" Margin="16,16,16,6">
+            <VerticalStackLayout Spacing="18">
+
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="COMENZI CATRE PLC"
+                               FontSize="21"
+                               FontAttributes="Bold"
+                               CharacterSpacing="1" />
+                        <Label Text="scriere de valori prin OPC UA" Style="{StaticResource MutedLabel}" />
+                    </VerticalStackLayout>
+
+                    <Border Grid.Column="1" Style="{StaticResource PillStyle}" VerticalOptions="Center">
+                        <Label Text="{Binding ConnectionHint}"
+                               FontSize="13"
+                               VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+
+                <FlexLayout Wrap="Wrap" Direction="Row">
+                    <Button Text="Adauga variabila"
+                            Margin="0,0,10,8"
+                            Style="{StaticResource PrimaryButton}"
+                            Command="{Binding AddCommand}" />
+                    <Button Text="Salveaza lista"
+                            Margin="0,0,10,8"
+                            Style="{StaticResource GhostButton}"
+                            Command="{Binding SaveCommand}" />
+                </FlexLayout>
+
+                <!-- avertisment cand esti pe simulare -->
+                <Border IsVisible="{Binding IsSimulation}"
+                        BackgroundColor="#1AF59E0B"
+                        Stroke="#F59E0B"
+                        StrokeThickness="1"
+                        Padding="14,10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Label Text="Simularea este pornita: valorile trimise nu ajung la PLC."
+                           FontSize="13"
+                           TextColor="#F59E0B" />
+                </Border>
+
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- ============================ CONTINUT ============================ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,10,16,16" Spacing="14">
+
+                <Label Text="VARIABILE DE SCRIS" Style="{StaticResource SectionTitle}" />
+
+                <FlexLayout Wrap="Wrap"
+                            Direction="Row"
+                            BindableLayout.ItemsSource="{Binding Commands}"
+                            BindableLayout.ItemTemplate="{StaticResource CommandCardTemplate}" />
+
+                <Label Text="Tipul de data trebuie sa fie acelasi cu cel din TIA Portal. Daca nu se potriveste, PLC-ul refuza scrierea cu BadTypeMismatch."
+                       Style="{StaticResource MutedLabel}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

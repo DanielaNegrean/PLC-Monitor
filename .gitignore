@@ -1,0 +1,87 @@
+# ---------------------------------------------------------------------------
+# SIGNING KEYS AND CERTIFICATES — never commit these
+# An Android keystore lets anyone publish updates that appear to come from you.
+# It cannot be revoked. Keep it outside the repository, with a backup.
+# ---------------------------------------------------------------------------
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.cer
+*.key
+*.snk
+signing.properties
+keystore.properties
+
+# ---------------------------------------------------------------------------
+# Visual Studio local state
+# Contains window layouts, Copilot indices, chat sessions and machine paths.
+# ---------------------------------------------------------------------------
+.vs/
+**/.vs/
+.idea/
+*.suo
+*.wsuo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+*.VC.db
+*.VC.VC.opendb
+
+# ---------------------------------------------------------------------------
+# Build output
+# ---------------------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+publish/
+Installer/
+*.apk
+*.aab
+*.msix
+*.appx
+*.dll
+*.exe
+
+# ---------------------------------------------------------------------------
+# Crash logs and diagnostics
+# JVM crash dumps from the Android toolchain contain your Windows user path.
+# ---------------------------------------------------------------------------
+hs_err_pid*.log
+replay_pid*.log
+*.dmp
+*.stackdump
+
+# ---------------------------------------------------------------------------
+# Local configuration — never commit real PLC addresses or credentials
+# ---------------------------------------------------------------------------
+appsettings.local.json
+*.local.json
+secrets.json
+config.ini
+.env
+
+# ---------------------------------------------------------------------------
+# OPC UA certificate store generated at first run
+# ---------------------------------------------------------------------------
+pki/
+**/pki/
+
+# ---------------------------------------------------------------------------
+# NuGet
+# ---------------------------------------------------------------------------
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# ---------------------------------------------------------------------------
+# OS noise
+# ---------------------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- Windows (desktop/laptop) + Android (telefon).
+		     Daca nu vrei Android, sterge "net9.0-android;" din linia de mai jos. -->
+		<TargetFrameworks>net9.0-android;net9.0-windows10.0.19041.0</TargetFrameworks>
+
+		<OutputType>Exe</OutputType>
+		<RootNamespace>PlcApp</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<ApplicationTitle>Monitorizare PLC</ApplicationTitle>
+		<ApplicationId>ro.local.plcapp</ApplicationId>
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>2</ApplicationVersion>
+
+		<!-- Aplicatie Windows "unpackaged": produce un .exe simplu, fara MSIX/certificat. -->
+		<WindowsPackageType Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">None</WindowsPackageType>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">24.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+	</PropertyGroup>
+
+	<!-- Publicarea pentru Windows: aplicatie self-contained, care ruleaza pe orice PC
+	     fara .NET sau Windows App SDK instalate. Conditia pe TargetFramework este
+	     importanta: daca pui RuntimeIdentifier in linia de comanda, el se aplica si
+	     tintei Android si restaurarea pachetelor esueaza. -->
+	<PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' AND '$(Configuration)' == 'Release'">
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<SelfContained>true</SelfContained>
+		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+	</PropertyGroup>
+
+	<!-- Stiva OPC UA foloseste reflectie; dezactivam trimming-ul pe Android ca sa nu
+	     dispara tipuri de care are nevoie la runtime. AOT-ul merge doar cu trimming
+	     activ, deci il oprim si pe el. -->
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)'=='Release'">
+		<RuntimeIdentifiers>android-arm64</RuntimeIdentifiers>
+		<AndroidPackageFormat>apk</AndroidPackageFormat>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+		<AndroidEnableMarshalMethods>false</AndroidEnableMarshalMethods>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#0B1220" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0B1220" BaseSize="160,160" />
+		<MauiImage Include="Resources\Images\*" />
+		<MauiFont Include="Resources\Fonts\*" />
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.213" />
+	</ItemGroup>
+
+</Project>

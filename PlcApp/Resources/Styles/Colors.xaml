@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Fundal pagina -->
+    <Color x:Key="PageBgLight">#F3F6FC</Color>
+    <Color x:Key="PageBgDark">#0B1220</Color>
+
+    <!-- Suprafete (carduri, bara de sus) -->
+    <Color x:Key="SurfaceLight">#FFFFFF</Color>
+    <Color x:Key="SurfaceDark">#141E33</Color>
+    <Color x:Key="SurfaceAltLight">#E9EFFA</Color>
+    <Color x:Key="SurfaceAltDark">#1B2742</Color>
+
+    <!-- Contururi -->
+    <Color x:Key="StrokeLight">#DCE4F2</Color>
+    <Color x:Key="StrokeDark">#253453</Color>
+
+    <!-- Text -->
+    <Color x:Key="TextLight">#111B33</Color>
+    <Color x:Key="TextDark">#E9EFFA</Color>
+    <Color x:Key="MutedLight">#64748B</Color>
+    <Color x:Key="MutedDark">#8DA0C0</Color>
+
+    <!-- Accente -->
+    <Color x:Key="Accent">#2563EB</Color>
+    <Color x:Key="AccentHover">#1D4ED8</Color>
+    <Color x:Key="Teal">#14B8A6</Color>
+    <Color x:Key="Amber">#F59E0B</Color>
+    <Color x:Key="Rose">#F43F5E</Color>
+    <Color x:Key="Violet">#8B5CF6</Color>
+    <Color x:Key="Green">#22C55E</Color>
+    <Color x:Key="Slate">#64748B</Color>
+
+</ResourceDictionary>

@@ -1,0 +1,2 @@
+Fisierele puse in acest folder sunt impachetate in aplicatie ca "raw assets"
+si pot fi citite cu FileSystem.OpenAppPackageFileAsync("nume.ext").

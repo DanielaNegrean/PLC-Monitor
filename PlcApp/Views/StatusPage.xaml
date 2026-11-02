@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PlcApp.ViewModels"
+             xmlns:models="clr-namespace:PlcApp.Models"
+             x:Class="PlcApp.Views.StatusPage"
+             x:DataType="vm:StatusViewModel"
+             Title="Stari">
+
+    <ContentPage.Resources>
+
+        <!-- ===================== indicatorul unui semnal ===================== -->
+        <DataTemplate x:Key="BoolCardTemplate" x:DataType="models:BoolSignal">
+            <Border Style="{StaticResource CardStyle}"
+                    WidthRequest="238"
+                    Margin="0,0,14,14"
+                    IsVisible="{Binding IsVisible}">
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="8">
+
+                    <!-- titlu + bec de stare -->
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                        <Ellipse Grid.Column="0"
+                                 WidthRequest="14"
+                                 HeightRequest="14"
+                                 VerticalOptions="Center"
+                                 Fill="{Binding StateBrush}" />
+                        <Label Grid.Column="1"
+                               Text="{Binding Title}"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </Grid>
+
+                    <!-- PORNIT / OPRIT -->
+                    <Label Grid.Row="1"
+                           Text="{Binding ValueText}"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           CharacterSpacing="1"
+                           TextColor="{Binding StateColor}" />
+
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ===================== doar indicatorul de stare ===================== -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="16,16,16,0">
+
+            <Border Style="{StaticResource PillStyle}" HorizontalOptions="End">
+                <HorizontalStackLayout Spacing="9">
+                    <Ellipse WidthRequest="11"
+                             HeightRequest="11"
+                             VerticalOptions="Center"
+                             Fill="{Binding StatusBrush}" />
+                    <Label Text="{Binding StatusText}"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- apare doar cand citirea da eroare -->
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="#1AF43F5E"
+                    Stroke="{StaticResource Rose}"
+                    StrokeThickness="1"
+                    Padding="14,10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10" />
+                </Border.StrokeShape>
+                <Label Text="{Binding ErrorText}"
+                       FontSize="13"
+                       TextColor="{StaticResource Rose}" />
+            </Border>
+
+        </VerticalStackLayout>
+
+        <!-- ============================ SEMNALE ============================ -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,10,16,16" Spacing="14">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="SEMNALE" Style="{StaticResource SectionTitle}" />
+                    <HorizontalStackLayout Grid.Column="1" Spacing="18">
+                        <Label Text="{Binding ActiveCountText}" Style="{StaticResource MutedLabel}" />
+                        <Label Text="{Binding LastUpdateText, StringFormat='Actualizat: {0}'}"
+                               Style="{StaticResource MutedLabel}" />
+                    </HorizontalStackLayout>
+                </Grid>
+
+                <FlexLayout Wrap="Wrap"
+                            Direction="Row"
+                            BindableLayout.ItemsSource="{Binding Signals}"
+                            BindableLayout.ItemTemplate="{StaticResource BoolCardTemplate}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

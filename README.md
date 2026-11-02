@@ -20,7 +20,7 @@ single codebase. Ported from an earlier Python implementation
 
 | Counters | Status | Commands |
 |---|---|---|
-| _(add image)_ | _(add image)_ | _(add image)_ |
+| ![Counters](docs/PLC-Monitor.png) | ![Satus](docs/PLC-Monitor stari.png)|![Commands](docs/PLC-Monitor comenzi.png) |
 
 ---
 

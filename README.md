@@ -19,13 +19,13 @@ single codebase. Ported from an earlier Python implementation
 <!-- Add screenshots here: docs/PLC-Monitor.png, docs/PLC-Monitor stari.png, docs/PLC-Monitor comenzi.png -->
 
 ### Counters
-![Counters]([docs/PLC-Monitor.png](https://github.com/DanielaNegrean/PLC-Monitor/blob/main/docs/PLC-Monitor%20comenzi.PNG))
+![Counters](docs/counters.png)
 
 ### Status
-![Status](docs/PLC-Monitor stari.png)
+![Status](docs/status.png)
 
 ### Commands
-![Commands](docs/PLC-Monitor comenzi.png)
+![Commands](docs/commands.png)
 
 ## Features
 

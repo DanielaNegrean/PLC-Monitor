@@ -18,11 +18,14 @@ single codebase. Ported from an earlier Python implementation
 
 <!-- Add screenshots here: docs/PLC-Monitor.png, docs/PLC-Monitor stari.png, docs/PLC-Monitor comenzi.png -->
 
-| Counters | Status | Commands |
-|---|---|---|
-| ![Counters](docs/PLC-Monitor.png) | ![Satus](docs/PLC-Monitor stari.png)|![Commands](docs/PLC-Monitor comenzi.png) |
+### Counters
+![Counters](docs/PLC-Monitor.png)
 
----
+### Status
+![Status](docs/PLC-Monitor stari.png)
+
+### Commands
+![Commands](docs/PLC-Monitor comenzi.png)
 
 ## Features
 

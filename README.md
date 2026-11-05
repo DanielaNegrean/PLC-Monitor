@@ -5,13 +5,18 @@ OPC UA and displays the live operating state of a residential heating system:
 run-time counters per circuit, digital status signals, and write-back commands.
 
 Built with **.NET MAUI** (C#), targeting **Windows** and **Android** from a
-single codebase. Ported from an earlier Python implementation
-(PySide6 + `asyncua`).
+single codebase. Ported from an [earlier Python implementation](python-client/) (PySide6 + `asyncua`).
 
 > **Note on the PLC side:** this repository contains only the client
 > application. The PLC program itself is configured in TIA Portal and is not
 > part of this project.
 
+## Repository layout
+
+| Folder | Contents |
+|---|---|
+| [`PlcApp/`](PlcApp/) | The current .NET MAUI client (C#), for Windows and Android. |
+| [`python-client/`](python-client/) | The original PySide6 + `asyncua` implementation this project was ported from. See its [README](python-client/README.md). |
 ---
 
 ## Screenshots
@@ -26,6 +31,7 @@ single codebase. Ported from an earlier Python implementation
 
 ### Commands
 ![Commands](docs/commands.png)
+
 
 ## Features
 
